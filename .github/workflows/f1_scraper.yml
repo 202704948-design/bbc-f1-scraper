@@ -1,0 +1,36 @@
+name: F1 News Daily Scraper
+
+# 1. 触发时间：每天北京时间早上 8 点（UTC 0点）运行一次
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch: # 允许我们手动点击运行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # 使用 Linux 服务器运行
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v3
+
+    - name: 安装 Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: 安装依赖库
+      run: |
+        pip install -r requirements.txt
+
+    - name: 运行爬虫脚本
+      run: |
+        python f1_news.py
+
+    - name: 自动保存更新后的 CSV
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        git add f1_news_perfect.csv
+        git commit -m "自动更新 F1 资讯" || exit 0
+        git push
