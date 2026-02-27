@@ -28,10 +28,15 @@ jobs:
       run: |
         python formula.py
 
-    - name: 自动保存更新后的 CSV
+    - name: Commit and push changes
       run: |
-        git config --global user.name "GitHub Action"
-        git config --global user.email "action@github.com"
-        git add f1_news_perfect.csv
-        git commit -m "自动更新 F1 资讯" || exit 0
-        git push
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add f1_news_perfect.csv
+          # 如果文件没变动，就跳过这一步
+          git commit -m "Auto update F1 news [skip ci]" || exit 0
+          
+          # ✨ 核心补丁：在推送前，先拉取远程最新的变动，并把自己的提交“接”在后面
+          git pull --rebase origin main
+          
+          git push
