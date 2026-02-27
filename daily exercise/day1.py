@@ -1,0 +1,6 @@
+name=input("请输入你的姓名:")
+age=input("请输入你的年龄:")
+age=int(age)
+print("你好，"+name)
+print("你今年", age, "岁")
+print("10年后你",age+10,"岁") 
